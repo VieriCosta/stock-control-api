@@ -13,6 +13,7 @@ API RESTful desenvolvida em Spring Boot para controle de produtos, matérias-pri
 - PostgreSQL (Docker)
 - Swagger / OpenAPI 3
 - Maven
+- JaCoCo (Code Coverage)
 - Docker
 
 ---
@@ -21,14 +22,13 @@ API RESTful desenvolvida em Spring Boot para controle de produtos, matérias-pri
 
 O projeto foi desenvolvido seguindo separação de responsabilidades:
 
-com.vieri.stockcontrol
-
-├── controller
-├── service
-├── repository
-├── domain/entity
-├── dto
-└── config
+* com.vieri.stockcontrol
+* ├── controller
+* ├── service
+* ├── repository
+* ├── domain/entity
+* ├── dto
+* └── config
 
 
 - **Controller** → Camada de entrada HTTP
@@ -39,7 +39,7 @@ com.vieri.stockcontrol
 
 ---
 
-## 📋 Funcionalidades Implementadas
+## Funcionalidades Implementadas
 
 ### CRUD de Produtos
 - Criar produto

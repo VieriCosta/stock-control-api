@@ -4,10 +4,12 @@ import com.vieri.stockcontrol.dto.ProductRequestDTO;
 import com.vieri.stockcontrol.dto.ProductResponseDTO;
 import com.vieri.stockcontrol.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -49,9 +51,21 @@ public class ProductController {
         return productService.update(id, dto);
     }
 
-    @Operation(summary = "Delete product")
+    @Operation(
+            summary = "Delete product",
+            description = "Deletes a product by its ID"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Product deleted successfully"),
+            @ApiResponse(responseCode = "404", description = "Product not found")
+    })
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(
+            @Parameter(description = "Product ID", example = "1")
+            @PathVariable Long id) {
+
         productService.delete(id);
+
+        return ResponseEntity.noContent().build();
     }
 }

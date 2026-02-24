@@ -4,8 +4,12 @@ import com.vieri.stockcontrol.dto.RawMaterialRequestDTO;
 import com.vieri.stockcontrol.dto.RawMaterialResponseDTO;
 import com.vieri.stockcontrol.service.RawMaterialService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -43,9 +47,21 @@ public class RawMaterialController {
         return rawMaterialService.update(id, dto);
     }
 
-    @Operation(summary = "Delete raw material")
+    @Operation(
+            summary = "Delete raw material",
+            description = "Deletes a raw material by its ID"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Raw material deleted successfully"),
+            @ApiResponse(responseCode = "404", description = "Raw material not found")
+    })
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(
+            @Parameter(description = "Raw material ID", example = "1")
+            @PathVariable Long id) {
+
         rawMaterialService.delete(id);
+
+        return ResponseEntity.noContent().build(); // 204
     }
 }
