@@ -10,6 +10,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.vieri.stockcontrol.dto.ProductRawMaterialResponseDTO;
+import java.util.List;
 
 @RestController
 @RequestMapping("/products")
@@ -29,14 +31,20 @@ public class ProductRawMaterialController {
             @ApiResponse(responseCode = "400", description = "Invalid request data")
     })
     @PostMapping("/{productId}/materials")
-    public ResponseEntity<Void> associateMaterial(
-            @Parameter(description = "Product ID", example = "1")
-            @PathVariable Long productId,
+public ResponseEntity<Void> associateMaterial(
+        @PathVariable Long productId,
+        @RequestBody ProductRawMaterialRequestDTO dto) {
 
-            @RequestBody ProductRawMaterialRequestDTO dto) {
+    productRawMaterialService.associate(productId, dto);
+    return ResponseEntity.noContent().build();
+}
 
-        productRawMaterialService.associate(productId, dto);
+@GetMapping("/{productId}/materials")
+public ResponseEntity<List<ProductRawMaterialResponseDTO>> getMaterials(
+        @PathVariable Long productId) {
 
-        return ResponseEntity.noContent().build(); // 204
-    }
+    return ResponseEntity.ok(
+            productRawMaterialService.findByProduct(productId)
+    );
+}
 }

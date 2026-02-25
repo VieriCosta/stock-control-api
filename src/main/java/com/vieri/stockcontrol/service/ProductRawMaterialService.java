@@ -4,11 +4,15 @@ import com.vieri.stockcontrol.domain.entity.Product;
 import com.vieri.stockcontrol.domain.entity.ProductRawMaterial;
 import com.vieri.stockcontrol.domain.entity.RawMaterial;
 import com.vieri.stockcontrol.dto.ProductRawMaterialRequestDTO;
+import com.vieri.stockcontrol.dto.ProductRawMaterialResponseDTO;
 import com.vieri.stockcontrol.repository.ProductRawMaterialRepository;
 import com.vieri.stockcontrol.repository.ProductRepository;
 import com.vieri.stockcontrol.repository.RawMaterialRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -33,5 +37,19 @@ public class ProductRawMaterialService {
                 .build();
 
         productRawMaterialRepository.save(association);
+    }
+
+    public List<ProductRawMaterialResponseDTO> findByProduct(Long productId) {
+
+        return productRawMaterialRepository.findByProductId(productId)
+                .stream()
+                .map(prm -> ProductRawMaterialResponseDTO.builder()
+                        .id(prm.getId())
+                        .rawMaterialId(prm.getRawMaterial().getId())
+                        .rawMaterialName(prm.getRawMaterial().getName())
+                        .requiredQuantity(prm.getRequiredQuantity())
+                        .stockQuantity(prm.getRawMaterial().getStockQuantity())
+                        .build())
+                .collect(Collectors.toList());
     }
 }
