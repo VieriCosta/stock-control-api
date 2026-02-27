@@ -1,129 +1,153 @@
-# 📦 Stock Control System
+#  StockControl API
 
-API RESTful desenvolvida em Spring Boot para controle de produtos, matérias-primas e cálculo de plano de produção com priorização por maior valor.
+Backend RESTful API for managing products, raw materials, and production planning.
+
+This system simulates an industrial stock control and production suggestion engine based on available raw materials.
 
 ---
 
-## Tecnologias Utilizadas
+##  Tech Stack
 
 - Java 17
 - Spring Boot 3
 - Spring Data JPA
-- Spring Security (estrutura preparada para JWT)
 - PostgreSQL (Docker)
-- Swagger / OpenAPI 3
+- Swagger / OpenAPI
 - Maven
 - JaCoCo (Code Coverage)
-- Docker
+- JUnit
+- Cypress-ready integration
 
 ---
 
-## Arquitetura
+##  Architecture
 
-O projeto foi desenvolvido seguindo separação de responsabilidades:
+The project follows clean layered architecture:
 
-* com.vieri.stockcontrol
-* ├── controller
-* ├── service
-* ├── repository
-* ├── domain/entity
-* ├── dto
-* └── config
+```
+com.vieri.stockcontrol
+ ├── controller
+ ├── service
+ ├── repository
+ ├── domain/entity
+ ├── dto
+ └── config
+```
 
-
-- **Controller** → Camada de entrada HTTP
-- **Service** → Regras de negócio
-- **Repository** → Persistência com JPA
-- **DTO** → Objetos de transferência
-- **Config** → Configurações globais
-
----
-
-## Funcionalidades Implementadas
-
-### CRUD de Produtos
-- Criar produto
-- Listar produtos
-- Buscar por ID
-- Atualizar
-- Deletar
-
-### CRUD de Matérias-Primas
-- Criar matéria-prima
-- Listar
-- Buscar por ID
-- Atualizar
-- Deletar
-
-### Associação Produto ↔ Matéria-Prima
-- Definir quantidade necessária de insumo por produto
-
-### Cálculo de Plano de Produção
-- Simula produção com base no estoque disponível
-- Prioriza produtos de maior valor
-- Retorna quantidade produzível
-- Retorna receita total estimada
-- Não altera o estoque real
+- **Controller** → HTTP entrypoints
+- **Service** → Business logic
+- **Repository** → Data access (JPA)
+- **DTO** → Data transfer objects
 
 ---
 
-## Estratégia de Produção
+##  Features
 
-O cálculo utiliza estratégia gulosa (Greedy Algorithm):
+###  Products CRUD
+- Create
+- List
+- Update
+- Delete
 
-1. Ordena produtos por maior preço
-2. Calcula quantidade máxima possível por insumo
-3. Usa o menor valor entre eles
-4. Atualiza estoque virtual
-5. Calcula receita total
+###  Raw Materials CRUD
+- Create
+- List
+- Update
+- Delete
 
-Fórmula utilizada:
-maxUnits = stockQuantity / requiredQuantity
+###  Product ↔ Raw Material Association
+- Define required quantity per product
 
+###  Production Plan Calculation
+
+- Calculates how many units can be produced
+- Prioritizes higher-value products
+- Uses greedy strategy
+- Calculates total revenue
 
 ---
 
-## Executando com Docker
+##  Production Strategy
 
-### Subir banco
+The system:
 
+1. Orders products by highest price
+2. Calculates max production based on raw material stock
+3. Uses the minimum available constraint
+4. Simulates stock consumption
+5. Returns estimated revenue
+
+---
+
+##  Running the Application
+
+### Start Database (Docker)
+
+```bash
 docker compose up -d
-./mvnw spring-boot:run
+```
 
-### Acessando Swagger
-Após iniciar a aplicação:
+### Run Application
 
+```bash
+mvn spring-boot:run
+```
+
+Swagger available at:
+
+```
 http://localhost:8080/swagger-ui/index.html
-
-### Banco de Dados
- 
-PostgreSQL rodando via Docker:
-
-Host: localhost
-Porta: 5432
-Database: stockdb
-User: postgres
-Password: postgres
+```
 
 ---
 
-### Segurança
+## Testing
 
-Atualmente liberada para desenvolvimento.
+### Run Unit + Integration Tests
 
-Estrutura preparada para implementação futura de:
+```bash
+mvn test
+```
 
-* JWT
-* Controle por Roles (ADMIN / USER)
+### Code Coverage
+
+JaCoCo report available at:
+
+```
+target/site/jacoco/index.html
+```
 
 ---
 
-### Autor
+## API Endpoint Example
+
+```
+GET /production-plan
+```
+
+Response:
+
+```json
+{
+  "items": [
+    {
+      "productId": 1,
+      "productName": "Table",
+      "quantity": 10,
+      "unitPrice": 350,
+      "totalValue": 3500
+    }
+  ],
+  "totalRevenue": 3500
+}
+```
+
+---
+
+##  Author
 
 Vieri Costa de Oliveira
 
+---
 
-
-
-
-
+This project was developed as a technical challenge.
